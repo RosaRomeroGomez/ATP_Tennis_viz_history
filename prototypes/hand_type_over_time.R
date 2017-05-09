@@ -3,6 +3,8 @@ library(GGally)
 library(plyr)
 library(readr)
 library(dplyr)
+library(grid)
+library(gridExtra)
 
 
 #Read data
@@ -44,16 +46,20 @@ bar_chart_winners<-ggplot(data=counts_winners, aes(x=counts_winners$year, y=coun
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-
-
 bar_chart_losers<-ggplot(data=counts_losers, aes(x=counts_losers$year, y=counts_losers$count,fill=counts_losers$hand_type)) +
   geom_bar(stat="identity")+
+  scale_y_reverse(limits=c(4500,0),breaks=c(0,1000,2000,3000,4000))+
   #geom_text(data=counts_losers,aes(x=counts_losers$year,y=counts_losers$count,label=counts_losers$count),vjust=0)+
   xlab("Date")+
   ylab("# of matches lost per year")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+mirror_plot<-grid.arrange(bar_chart_winners, bar_chart_losers, ncol=1)
+
   
 ggsave(width=15, height=8, dpi=100,limitsize=FALSE,filename="../prototypes/number_of_matches_won_per_year_player_hand.pdf", plot=bar_chart_winners)
 ggsave(width=15, height=8, dpi=100,limitsize=FALSE,filename="../prototypes/number_of_matches_lost_per_year_player_hand.pdf", plot=bar_chart_losers)
+ggsave(width=15, height=8, dpi=100,limitsize=FALSE,filename="../prototypes/mirror_number_of_matches_per_year_player_hand.pdf", plot=mirror_plot)
 
